@@ -1,0 +1,46 @@
+{% extends layout %}
+
+{% block content %}
+<div class="container">
+    
+    <h1>Login Adminbereich</h1>
+
+    {% if error %}
+        <div class="alert error">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    {% if status %}
+        <div class="alert error">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <div class="contact-form">
+        <form method="POST" action="admin/index">
+            <div class="row">
+                <div class="col-md-12">
+                    <input type="text" class="input-name form-control" name="username" placeholder="Benutzer" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <input style="margin-bottom:0px; margin-top:10px" type="password" class="input-name form-control" name="password" placeholder="Passwort" /><br>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" type="submit" name="sub_login">
+                        Einloggen
+                        <i class="icon-paper-plane"></i>
+                    </button> 
+                </div>
+            </div>
+        </form>
+    </div>
+
+       
+{% endblock %}

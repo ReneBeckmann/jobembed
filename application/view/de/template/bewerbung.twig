@@ -1,0 +1,309 @@
+{% extends layout %}
+{% block title %}Bewerbung{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="css/jquery.steps.css">
+    {# <link rel="stylesheet" href="css/bewerbung.css"> #}
+
+    <style>
+        :root {
+            --bgColor: {{ bgColor }};
+            --primaryColor: {{ primaryColor }};
+            --secondaryColor: {{ secondaryColor }};
+            --fontColor: {{ fontColor }};
+            --linkColor: {{ linkColor }};
+        }
+
+        .btn-primary {
+            color:var(--fontColor);
+            background-color: var(--primaryColor);
+            border-color: var(--primaryColor);
+        }
+
+        .btn-primary:hover {
+            color:var(--fontColor);
+            background-color: var(--primaryColor);
+            border-color: var(--primaryColor);
+        }
+
+        .btn-next{
+            width:50%;
+        }
+    </style>
+
+    <style>
+        .actions {
+            display: none !important;
+        }
+        
+        .answerWrapper{
+            height:100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .wizard>.steps {
+            position: relative;
+            display: none;
+            width: 100%;
+        }
+        
+        .wizard>.content {
+            background: var(--bgColor);
+            border: 1px solid var(--primaryColor);
+            border-radius: 15px;           
+        }
+
+        .wizard>.content>.body .stepsElement {
+            display: none !important;
+        }
+        
+        .wizard>.content>.body {
+            float: unset; 
+            position: unset; 
+            width: 95%; 
+            height: 95%; 
+            padding: 2.5%;
+        }
+        
+        /*
+        .stepsElement {
+            -webkit-appearance: none;
+        }
+        */
+    
+        .stepsElement:hover+label {
+            background-color: var(--primaryColor);
+            color:var(--fontColor);
+            cursor:pointer;
+        }
+
+        .stepsElement:checked+label {
+            background-color: var(--primaryColor);
+            color:var(--fontColor);
+            /*box-shadow: 0 15px 45px rgba(24, 249, 141, 0.2);*/
+        }
+        
+        .mfa:checked+label {
+            background-color: var(--primaryColor);
+            
+            color:var(--fontColor);
+            /*box-shadow: 0 15px 45px rgba(24, 249, 141, 0.2);*/
+        
+        }
+        
+        label {
+            width:80%;
+            border: 2px solid var(--primaryColor);
+            border-radius:15px;
+            padding:10px;
+            color:var(--fontColor);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="float-start">Stellenangebot:&nbsp;{{ stelle.name }}</h3>
+                <button class="btn btn-primary float-end" onclick="history.back()">Zurück</button>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <p>
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quod amet quos quia molestias, aut libero a quas asperiores sunt placeat, nam voluptatum in doloremque facilis tenetur suscipit, blanditiis obcaecati magni!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <form id="apiBewerbung" action="api/senden" method="post">
+                <div class="col-md-12">
+
+                    <div id="apiForm">
+                        {# JA / NEIN FRAGE #}
+                        {% for frage in fragen %}
+                            <h3></h3>
+                            <section>
+                                <div class="row text-center">
+                                    <div class="col-xs-12 col-md-8 offset-md-2 mb-5">
+                                        <h4>{{ frage.frage }}</h4>
+                                    </div>
+                                    
+                                    <div class="answerWrapper">
+                                        {% if frage.type == 1 %}
+
+                                            <div class="col-12 col-xs-12 col-md-12">
+                                                <input class="stepsElement" type="radio" name="antwort_{{ frage.id }}" id="antwort_{{ frage.id }}_ja" value="Ja">
+                                                <label for="antwort_{{ frage.id }}_ja">
+                                                    <span>JA</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-12 col-xs-12 col-md-12">
+                                                <input class="stepsElement" type="radio" name="antwort_{{ frage.id }}" id="antwort_{{ frage.id }}_nein" value="Nein">
+                                                <label for="antwort_{{ frage.id }}_nein">
+                                                    <span>NEIN</span>
+                                                </label>
+                                            </div>
+
+                                        {% elseif frage.type == 2 %}
+
+                                            {% for antwort in antworten if frage.id == antwort.id_frage %}
+                                                <div class="col-12 col-xs-12 col-md-12">
+                                                    <input class="stepsElement mfa" type="checkbox" name="antwort_{{ frage.id }}[]" id="antwort_{{ antwort.id }}" value="{{ antwort.antwort }}">
+                                                    <label for="antwort_{{ antwort.id }}">
+                                                        <span>{{ antwort.antwort }}</span>
+                                                    </label>
+                                                </div>  
+                                            {% endfor %}
+
+                                        {% elseif frage.type == 3 %}
+
+                                            {% for antwort in antworten if frage.id == antwort.id_frage %}
+                                                <div class="col-12 col-xs-12 col-md-12 text-right">
+                                                    <input class="stepsElement" type="radio" name="antwort_{{ frage.id }}" id="antwort_{{ antwort.id }}" value="{{ antwort.antwort }}">
+                                                    <label for="antwort_{{ antwort.id }}">
+                                                        <span>{{ antwort.antwort }}</span>
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+
+                                        {% if frage.type == 2 %}
+                                            <div class="col-md-12 mt-5 text-center">
+                                                <button class="form-control btn btn-primary btn-next">Weiter</button>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                            </section>
+                        {% endfor %}
+
+                        {# ABSCHLUSS #}
+                        <h3></h3>
+                        <section>
+                            <div class="row">
+                                <div class="col-md-12 mb-5 text-center">
+                                    <h4>Wir freuen uns, dich persönlich kennen zu lernen und dich schon bals bei uns begrüßen zu dürfen.</h4>
+                                </div>
+                        
+                                <div class="col-12 col-xs-12 col-md-12 ">
+                                    <div class="mt-2">
+                                        <input class="form-control" type="text" id="name" name="name" placeholder="Ihr Name" required>
+                                    </div>
+                                    <div class="mt-2">
+                                        <input class="form-control" type="text" id="email" name="email" placeholder="Ihre E-Mail Adresse" required>
+                                    </div>
+                                    <div class="mt-2">
+                                        <input class="form-control" type="text" id="telefon" name="telefon" placeholder="Ihre Telefonnummer" required>
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <small>
+                                            {{ unternehmen }} verarbeitet als Verantwortlicher im Sinne der Datenschutzbestimmungen Ihre zur Verfügung gestellten
+                                            Informationen ausschließlich zur Durchführung des Bewerbungsverfahrens. Weitere Informationen über die Verarbeitung Ihrer personenbezogenen Daten, sowie
+                                            die Beauftragung von externen Dienstleistern und Informationen über Ihre Rechte finden Sie in unserer ausführlichen Datenschutzerklärung.
+                                        </small>
+                                    </div>
+                                    <div class="mt-2">
+                                        <input class="form-checkbox" type="checkbox" name="datenschutz" value="1" required>
+                                        <small>Ich habe die <a href="{{ urlDisclaimer }}" target="_blank">Datenschutzhinweise</a> zur Kenntnis genommen und akzeptiert.</small>
+                                    </div>
+                                    <div class="mt-2">
+                                        <input class="form-checkbox" type="checkbox" name="bewerberpool" value="1" required>
+                                        <small>Hiermit willige ich ein, dass meine Daten für bis zu einem Jahr gespeichert werden und ich für ähnliche Jobangebote
+                                        kontaktiert werde.</small>
+                                    </div>
+                                    <div class="mt-2 mb-5">
+                                        <input class="btn btn-primary form-control" type="submit" name="subSend" id="subSend" value="Bewerbung absenden">
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <div id="output" class="text-start"></div>
+                    </div>
+                </div>
+                <input type="hidden" name="stelleName" id="stelleName" value="{{ stelle.name }}" />
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="js/jquery.steps.js"></script>
+    <script src="js/iframeResizer.contentWindow.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            
+            /*INITI STEPWIZARD*/
+            let stepsWizard = $("#apiForm")
+
+            stepsWizard.steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "fade",
+                autoFocus: true
+            });
+
+            /*CUSTOM BUTTONS FOR STEPWIZARD*/
+            $('.btn-prev').on('click', function (event) {
+                event.preventDefault();
+                stepsWizard.steps('previous')
+            })
+
+            $('.btn-next').on('click', function (event) {
+                event.preventDefault();
+                stepsWizard.steps('next')
+            })
+
+
+            /* CHECK-/RADIOBOX LISTENER  */
+            /*  */
+            $('.stepsElement:not(.mfa)').on('change', function () {
+
+                setTimeout(function () {
+                    stepsWizard.steps('next')
+                }, 300);
+
+
+                /*
+                    var datastring = $("#b60s").serialize();
+                    console.log(datastring)
+                */
+            });
+
+            $('#apiBewerbung').on('submit', function(e){
+                e.preventDefault()
+                let output = $('#output');
+
+                let formData = new FormData(this);
+        
+                $.ajax({
+                    type: "POST",
+                    url: "intern/sendForm",
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        output.html(response)
+                    }
+                });
+            });
+
+        });
+
+    </script>
+{% endblock %}

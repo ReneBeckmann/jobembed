@@ -1,0 +1,129 @@
+{% extends layout %}
+{% block title %}Meine Stellenanzeigen{% endblock %}
+
+{% block styles %}
+    <style>
+        .fa-plus{
+            font-size:2em;
+        }
+
+        .setHidden:hover, .setVisible:hover{
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="row mb-2">
+            <div class="col-md-10">
+                <h4>Stellenangebote</h4>
+            </div>
+            <div class="col-md-2 pb-2">
+                {% if anzJobs < limitJobs %}
+                    <a href="intern/addjob" class="float-end"><i class="fa-solid fa-plus"></i></a>
+                {% endif %}
+            </div>
+            {% if anzJobs >= limitJobs %}
+                <div class="col-md-12">
+                    <div class="alert alert-warning" role="alert">
+                        Die maximale Anzahl an Stellenausschreibungen in Ihrem Paket ist erreicht!
+                    </div>
+                </div>
+            {% endif %}
+            <hr>
+        </div>
+
+        
+        <div class="row">
+            {% for stelle in stellen %}   
+                <div class="col-md-6 pb-4">
+                    <div class="stellenwrapper ">
+                        <table class="table">
+                            <tr>
+                                <td colspan="2">
+                                    <h6>{{ stelle.name }}</h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Art</td>
+                                <td>{{ stelle.stellenart }}</td>
+                            </tr>
+                            <tr>
+                                <td>Erstellt</td>
+                                <td>{{ stelle.created_at|date('d.m.Y') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Zuletzt bearbeitet</td>
+                                <td>{{ stelle.modified_at|date('d.m.Y') }}</td>
+                            </tr>
+                            <tr>
+                                <td>Standort</td>
+                                <td>{{ stelle.s_plz }} {{ stelle.s_ort }}</td>
+                            </tr>
+                            <tr>
+                                <td>Ansprechpartner</td>
+                                <td>{{ stelle.a_vorname }} {{ stelle.a_nachname }}</td>
+                            </tr>
+                        </table>
+
+                        <div class="details">
+                            <ul class="text-start float-start ps-0">
+                                <li class="ps-0">
+                                    {% if stelle.visible == 1 %}
+                                        <i class="setHidden fa-solid fa-check text-success" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></i> Online
+                                    {% else %}
+                                        <i class="setVisible fa-solid fa-ban text-danger" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"></i> Offline
+                                    {% endif %}
+                                    <input type="hidden" class="id_stelle" value="{{ stelle.id }}" />
+                                </li>
+                            </ul>
+                            <ul class="text-end">
+                                <li><a href="intern/editJob/{{ stelle.id }}"   class=""><i class="fa-solid fa-pen-to-square"></i></a></li>
+                                <li><a href="intern/bewerbung/{{ stelle.id }}" class=""><i class="fa-solid fa-list-check"></i></a></li>
+                                <li><a href="intern/deleteJob/{{ stelle.id }}" class=""><i class="fa-solid fa-trash"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $('.setHidden').on('click', function(e){
+            let id = $(this).next('.id_stelle').val()
+
+            $.ajax({
+                type: "POST",
+                url: "intern/setHidden",
+                data:{
+                    id: id
+                },
+                success: function (response) {      
+                    location.reload();
+                }
+            });
+        });
+
+        $('.setVisible').on('click', function(e){
+            let id = $(this).next('.id_stelle').val()
+
+            $.ajax({
+                type: "POST",
+                url: "intern/setVisible",
+                data:{
+                    id: id
+                },
+                success: function (response) {      
+                    location.reload();
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,284 @@
+{% extends layout %}
+{% block title %}Bewerbungsformular hinzufügen{% endblock %}
+{% block content %}
+
+
+    <div class="container">
+        <div class="row mb-2">
+            <div class="col-md-12 pb-2">
+                <a href="intern/meineStellen" class="float-end btn btn-primary">Zurück</a>
+            </div>
+            <hr>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <h1>{{ stellen.name }}</h1>
+                <p class="pb-5">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis numquam veniam enim ea iure, delectus, voluptatum neque eius tenetur cumque exercitationem recusandae rem rerum, inventore qui dignissimos doloribus repellendus. Temporibus.
+                </p>
+                <form name="addBewerbungForm" id="addBewerbungForm" action="#" method="POST">
+                    {% if fragen %}
+                        {% for frage in fragen %}
+                            {% if frage.type == 1 %}
+                                {% include  'de/intern/templates/addType1.twig' %}
+                            {% elseif frage.type == 2 %}
+                                {% include  'de/intern/templates/addType2.twig' %}
+                            {% elseif frage.type == 3 %}
+                                {% include  'de/intern/templates/addType3.twig' %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </form>
+            </div> 
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <button class="btn btn-primary form-control" id="btn_addType1">JA / NEIN</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary form-control" id="btn_addType2">Mehrfach Antwort</button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary form-control" id="btn_addType3">Einzel Antwort</button>
+            </div>
+        </div>
+
+
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <input type="hidden" id="id_unternehmen" name="id_unternehmen" value="{{ session.id_unternehmen }}" />
+                <input type="hidden" id="id_stelle" name="id_stelle" value="{{ stellen.id }}" /> 
+            </div>            
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        $(document).ready(function () {
+            
+            //SORTIERUNG VON FRAGEN
+            $( "#addBewerbungForm" ).sortable({
+                update: function(event, ui) {
+                    updatePosition();
+                }
+            });
+            $( "#addBewerbungForm" ).disableSelection();
+      
+            //UPDATE DER POSITION IM DOM UND DB
+            function updatePosition() 
+            {
+                $("#addBewerbungForm .inputFrage").each(function (index) 
+                {
+                    let id       = $(this).find(".frage").attr('data-id')
+                    let position = index
+
+                    $.ajax({
+                        type: "POST",
+                        url: "intern/updateFragePosition",
+                        data:{
+                            id: id,
+                            position: position
+                        },
+                        success: function (response) {
+                            $(this).find(".frage").attr('data-position',index);
+                        }
+                    });
+                });
+            }
+
+            //UPDATE FRAGETEXT
+            $('#addBewerbungForm').on('keyup', '.frage', function (e) {
+                let text = $(this).val()
+                let id   = $(this).attr('data-id')
+
+                $.ajax({
+                    type: "POST",
+                    url: "intern/updateFrageText",
+                    data:{
+                        id: id,
+                        frage: text
+                    }
+                });
+            })
+
+            //UPDATE ANTWORTTEXT
+            $('#addBewerbungForm').on('keyup', '.antwort', function (e) {
+                let text = $(this).val()
+                let id   = $(this).attr('data-id')
+
+                $.ajax({
+                    type: "POST",
+                    url: "intern/updateAntwortText",
+                    data:{
+                        id: id,
+                        antwort: text
+                    }
+                });
+            })
+
+            //JA NEIN FRAGE HINZUFÜGEN
+            $('#btn_addType1').on('click', function(e){
+                let frage = '';
+                let type = 1;
+                let id_unternehmen  = $('#id_unternehmen').val();
+                let id_stelle       = $('#id_stelle').val();
+
+                //anzahl == position
+                let anzahl = $('.frage').length
+
+                $.ajax({
+                    type: "POST",
+                    url: "intern/addType1",
+                    data:{
+                        anzahl: anzahl,
+                        frage: frage,
+                        type: type,
+                        id_unternehmen: id_unternehmen,
+                        id_stelle: id_stelle
+                    },
+                    success: function (response) {
+                        $("#addBewerbungForm").append(response)
+                    }
+                });
+            });
+
+            //FRAGE MIT MEHFACHANTWORT HINZUFÜGEN
+            $('#btn_addType2').on('click', function (e) {
+                let frage = '';
+                let type = 2;
+                let id_unternehmen  = $('#id_unternehmen').val();
+                let id_stelle       = $('#id_stelle').val();
+                
+                //anzahl == position
+                let anzahl = $('.frage').length
+                
+                $.ajax({
+                    type: "POST",
+                    url: "intern/addType2",
+                    data: {
+                        anzahl: anzahl,
+                        frage: frage,
+                        type: type,
+                        id_unternehmen: id_unternehmen,
+                        id_stelle: id_stelle
+                    },
+                    success: function (response) {
+                        $("#addBewerbungForm").append(response)
+                    }
+                });
+            });
+
+            //FRAGE MIT EINZELANTWORT HINZUFÜGEN
+            $('#btn_addType3').on('click', function (e) {
+                let frage = '';
+                let type = 3;
+                let id_unternehmen  = $('#id_unternehmen').val();
+                let id_stelle       = $('#id_stelle').val();
+                
+                //anzahl == position
+                let anzahl = $('.frage').length
+                
+                $.ajax({
+                    type: "POST",
+                    url: "intern/addType3",
+                    data: {
+                        anzahl: anzahl,
+                        frage: frage,
+                        type: type,
+                        id_unternehmen: id_unternehmen,
+                        id_stelle: id_stelle
+                    },
+                    success: function (response) {
+                        $("#addBewerbungForm").append(response)
+                    }
+                });
+            });
+
+            // ANTWORT HINZUFÜGEN
+            $('#addBewerbungForm').on('click', '.addAntwort', function (e) {
+                e.preventDefault()
+
+                let antwort     = '';
+                let id_frage    = $(this).prevAll('.frage').attr('data-id')
+                let id_stelle   = $('#id_stelle').val();
+
+                //OUTPUT FÜR ANTWORTEN
+                let antworten = $(this).prev('.antworten');
+                
+                $.ajax({
+                    type: "POST",
+                    url: "intern/addAntwort",
+                    data: {
+                        antwort: antwort,
+                        id_frage: id_frage,
+                        id_stelle: id_stelle
+                    },
+                    success: function (response) {      
+                        antworten.append(response)
+                    }
+                });
+            });
+
+            // ANTWORT FÜR FRAGE MIT EINZALANTWORTEN HINZUFÜGEN
+            $('#addBewerbungForm').on('click', '.addType3Antwort', function (e) {
+                e.preventDefault()
+              
+                let parentFrage = $(this).prevAll('.type3Frage').attr('name')
+            
+                let antworten = $(this).prev('.antworten');
+
+                $.ajax({
+                    type: "POST",
+                    url: "intern/addType3Antwort",
+                    data: {
+                        parent: parentFrage
+                    },
+                    success: function (response) {      
+                        
+                        antworten.append(response)
+                        
+                    }
+                });
+            });
+
+
+            //FRAGEN LÖSCHEN
+            $('#addBewerbungForm').on('click', '.delFrage', function(e){
+                e.preventDefault()
+                let id = $(this).attr("data-id");
+     
+                $.ajax({
+                    type: "POST",
+                    url: "intern/deleteFrage",
+                    data:{
+                        id: id
+                    }
+                });
+
+                $(this).parents('.inputFrage').remove()
+            });
+
+            //ANTWORTEN LÖSCHEN
+            $('#addBewerbungForm').on('click', '.delAntwort', function(e){
+                e.preventDefault()
+                let id = $(this).attr('data-id')
+
+                $.ajax({
+                    type: "POST",
+                    url: "intern/deleteAntwort",
+                    data:{
+                        id: id
+                    }
+                });
+
+                $(this).parents('.inputAntwort').remove()
+            });
+
+        });
+    </script>
+{% endblock %}

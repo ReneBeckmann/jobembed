@@ -1,0 +1,25 @@
+<table class="table table-fluid table-striped">
+    <thead>
+        <th>Nachname</th>
+        <th>Vorname</th>
+        <th>Telefon</th>
+        <th>E-Mail</th>
+        <th class="text-end">Optionen</th>
+    </thead>
+    <tbody>
+        {% for row in ansprechpartner %}
+            <tr>
+                <td>{{ row.nachname }}</td>
+                <td>{{ row.vorname }}</td>
+                <td>{{ row.telefon }}</td>
+                <td>{{ row.email }}</td>
+                <td class="text-end">
+                    <div class="controls">
+                        <button class="btn btn-xs btn-danger delAnsprechpartner"><i class="fa-solid fa-trash"></i></button>
+                        <input type="hidden" class="idAnsprechpartner" value="{{ row.id }}">
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

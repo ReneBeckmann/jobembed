@@ -1,0 +1,40 @@
+{% extends layout %}
+{% block title %}Stellenanzeigen{% endblock %}
+{% block content %}
+
+    {{ error }}
+
+    <div class="container">
+        {% for row in stellen %}
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Stellenangebot Details</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <h5>{{ row.name }}</h5>
+
+                    <p class="pe-5">{{ row.beschreibung|raw }}</p>
+                    <button class="btn btn-primary">Bewerben</button>
+                </div>
+                <div class="col-md-3">
+                    <p>
+                        <b>{{ row.unternehmensname }}</b><br>
+                        {{ row.strasse }}<br>
+                        {{ row.plz }}<br>
+                        {{ row.ort }}<br>
+                        {{ row.tel }}<br>
+                        {{ row.fax }}<br>
+                        <a href="mailto:{{ row.email }}">{{ row.email }}</a>
+                        <a href="{{ row.url }}" target="_blank">{{ row.url }}</a>
+                    </p>
+                </div>
+                <hr>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+

@@ -1,0 +1,63 @@
+{% extends layout %}
+{% block title %}Login{% endblock %}
+{% block css %}{% endblock %}
+
+{% block content %}
+
+	<section>
+  		<div class="container">
+    		<div class="row d-flex justify-content-center align-items-center">
+      			<div class="col col-xl-10">
+        			<div class="card" style="border-radius: 1rem;">
+          				<div class="row g-0">
+            				<div class="col-md-6 col-lg-5 d-none d-md-block">
+              					<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp" alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
+            				</div>
+            				<div class="col-md-6 col-lg-7 d-flex align-items-center">
+              					<div class="card-body p-4 p-lg-5 text-black">
+
+                					<form action="login" method="post">
+										<div class="text-end mb-3 pb-1">
+                    						<img src="images/logos/creativeLogo.png" alt="" class="img-fluid">
+                  						</div>
+										
+										{% if error %}
+											<div class="alert alert-warning" role="alert">
+												{{ error }}
+										  	</div>
+										{% endif %}
+
+										<h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">WILLKOMMEN ZURÜCK!</h5>
+										<div class="form-outline mb-4">
+                    						<input type="email" id="userMail" name="userMail" class="form-control form-control-lg" />
+                    						<label class="form-label" for="userMail">Email Adresse</label>
+                  						</div>
+
+										<div class="form-outline mb-4">
+											<input type="password" id="userPass" name="userPass" class="form-control form-control-lg" />
+											<label class="form-label" for="userPass">Passwort</label>
+										</div>
+
+										<div class="pt-1 mb-4">
+											<button type="submit" name="sub_login" class="btn btn-primary btn-lg btn-block" type="button">Login</button>
+										</div>
+
+										<a class="small text-muted" href="#!">Passwort vergessen?</a>
+										<p class="mb-5 pb-lg-2" style="color: #393f81;">Noch keinen Account? <a href="#!" style="color: #393f81;">Hier registrieren</a></p>
+                					</form>
+
+              					</div>
+            				</div>
+          				</div>
+        			</div>
+      			</div>
+    		</div>
+  		</div>
+	</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+{% endblock %}

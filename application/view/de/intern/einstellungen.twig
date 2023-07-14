@@ -1,0 +1,469 @@
+{% extends layout %}
+{% block title %}Einstellungen{% endblock %}
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mb-2">
+                <h4>Einstellungen</h4>
+                <hr/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-uebersicht-tab" data-bs-toggle="tab" data-bs-target="#nav-uebersicht" type="button" role="tab" aria-controls="nav-uebersicht" aria-selected="true">Übersicht</button>
+                        <button class="nav-link" id="nav-unternehmen-tab" data-bs-toggle="tab" data-bs-target="#nav-unternehmen" type="button" role="tab" aria-controls="nav-unternehmen" aria-selected="false">Unternhemen</button>
+                        <button class="nav-link" id="nav-ansprechpartner-tab" data-bs-toggle="tab" data-bs-target="#nav-ansprechpartner" type="button" role="tab" aria-controls="nav-ansprechpartner" aria-selected="false">Ansprechpartner</button>
+                        <button class="nav-link" id="nav-standorte-tab" data-bs-toggle="tab" data-bs-target="#nav-standorte" type="button" role="tab" aria-controls="nav-standorte" aria-selected="false">Standorte</button>
+                        <button class="nav-link" id="nav-colors-tab" data-bs-toggle="tab" data-bs-target="#nav-colors" type="button" role="tab" aria-controls="nav-colors" aria-selected="false">Darstellung</button>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-uebersicht" role="tabpanel" aria-labelledby="nav-uebersicht-tab">
+                        <div class="row mt-5">
+                            {% for row in unternehmen %}
+                                <div class="col-md-6">
+                                    <p>
+                                        <b>{{ row.name }}</b> <span id="editStammdaten"><i class="ms-5 fa fa-pen-to-square"></i><small> Stammdaten bearbeiten</small></span><br>
+                                        {{  row.strasse }}<br>
+                                        {{  row.plz }}<br>
+                                        {{  row.ort }}<br>
+                                        {{  row.telefon }}<br>
+                                        {{  row.fax }}<br>
+                                        <a href="mailto:{{  row.email }}">{{  row.email }}</a><br>
+                                        <a href="{{  row.url }}" target="_blank">{{ row.url }}</a><br> 
+                                    </p>
+                                </div>
+
+                                <div class="col-md-6 ">
+                                    <p>
+                                        <b>Binden Sie folgendes Script im Headbereich Ihrer Ihre Seite ein:</b><br>
+                                        <input class="form-control" type="text" value="<script defer async src='{{ web_base }}/api/connect.js'></script>" readonly />
+                                    </p>
+
+                                    <p>
+                                        <b>Binden Sie folgenden Code an der gewünschten Ausgabestelle in Ihrer Seite ein:</b><br>
+                                        <input class="form-control" type="text" value="<div id='{{ row.apikey }}' class='jprb'></div>" readonly />
+                                    </p>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row mt-5 mb-5" id="stammdatenWrapper">
+                            <div class="col-md-12">
+                                <h5>Stammdaten:</h5>
+                            </div>
+                            {% for row in unternehmen %}
+                                <div class="col-md-6">
+                                    <form id="stammdatenForm">
+                                        <div class="mb-3">
+                                            <label for="strasse">Straße</label>
+                                            <input type="text" name="strasse" id="strasse" class="form-control" value="{{ row.strasse }}" required>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="plz">Postleitzahl</label>
+                                                    <input type="text" name="plz" id="plz" class="form-control" value="{{ row.plz }}" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="ort">Ort</label>
+                                                    <input type="text" name="ort" id="ort" class="form-control" value="{{ row.ort }}" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="telefon">Telefon</label>
+                                            <input type="tel" name="telefon" id="telefon" class="form-control" value="{{ row.telefon }}" placeholder="0 1234 56789" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="telefon">Telefax</label>
+                                            <input type="fax" name="fax" class="form-control" value="{{ row.fax }}" placeholder="0 1234 56789" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="email">E-Mail Adresse</label>
+                                            <input type="email" name="email" id="email" class="form-control" value="{{ row.email }}" placeholder="z.B. info@ihrewebseite.de" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="url">Webseite</label>
+                                            <input type="url" name="url" id="url" class="form-control" value="{{ row.url }}" placeholder="z.B. https://www.ihrewebseite.de" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="urlDisclaimer">Link zu Datenschutzerklärung auf Ihrer Webseite</label>
+                                            <input type="url" name="urlDisclaimer" id="urlDisclaimer" class="form-control" value="{{ row.urlDisclaimer }}" placeholder="z.B. https://www.ihrewebseite.de/datenschutz" required>
+                                        </div>
+                                        <input type="hidden" name="uid" id="uid" value="{{ row.id }}">
+                                        <input type="submit" name="btnSubmitStammdaten" id="btnSubmitStammdaten" value="speichern" class="btn btn-primary form-control "/>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                
+                                </div>
+                                
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="nav-unternehmen" role="tabpanel" aria-labelledby="nav-unternehmen-tab">
+                        <div class="row mt-5">
+                            <div class="col-md-10">
+                                <h5>Unternehmensinformation:</h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="unternehmenInfo"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="nav-colors" role="tabpanel" aria-labelledby="nav-colors-tab">
+                        <div class="row mt-5">
+                            {% for row in unternehmen %}
+                                <div class="col-md-4">
+                                    <label for="primaryColor">Hauptfarbe</label>
+                                    <input class="form-control w-20" type="color" name="primaryColorPicker" id="primaryColor" value="{{ row.primaryColor }}"/>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="bgColor">Hintergrundfarbe</label>
+                                    <input class="form-control w-20" type="color" name="backgroundColorPicker" id="bgColor" value="{{ row.bgColor }}"/>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="fontColor">Schriftfarbe</label>
+                                    <input class="form-control w-20" type="color" name="fontColorPicker" id="fontColor" value="{{ row.fontColor }}"/>
+                                </div>
+
+                                {# <div class="col-md-3">
+                                    <label for="linkColor">Linkfarbe</label>
+                                    <input class="form-control w-20" type="color" name="linkColorPicker" id="linkColor" value="{{ row.linkColor }}"/>
+                                </div> #}
+                            {% endfor %}
+                        </div>
+
+                        <div class="row mt-5">  
+                            <div class="col-md-12 mt-5">
+                                <h5>Vorschau:</h5>
+                                <div id="vorschau"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="nav-ansprechpartner" role="tabpanel" aria-labelledby="nav-ansprechpartner-tab">
+                        <div class="row mt-5">
+                            <div class="col-md-10">
+                                <h5>Ansprechpartner:</h5>
+                            </div>
+                            <div class="col-md-2 pb-2">
+                                <button class="btn btn-primary float-end btnShowAddAnsprechpartnerForm">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <form id="addAnsprechpartnerForm">
+                            <div class="row mb-4" id="addFieldAnsprechpartner" style="display:none;">
+                            
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="formVorname" placeholder="Vorname" required/>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="formNachname" placeholder="Nachname" required/>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="formTelefon" placeholder="Telefonnummer" required/>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="email" class="form-control" id="formEmail" placeholder="E-Mail Adresse" required/>
+                                </div>
+                                <div class="col-md-12 mt-2">
+                                    <button type="submit" class="btn btn-primary btn-xs form-control">Speichern</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="ansprechpartner"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="nav-standorte" role="tabpanel" aria-labelledby="nav-standorte-tab">
+                        <div class="row mt-5">
+                            <div class="col-md-10">
+                                <h5>Standorte:</h5>
+                            </div>
+                            <div class="col-md-2 pb-2">
+                                <button class="btn btn-primary float-end btnShowAddStandorteForm">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <form id="addStandorteForm">
+                            <div class="row mb-4" id="addFieldStandorte" style="display:none;">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="formStrasse" placeholder="Straße/Hausnummer" required/>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="formPLZ" placeholder="Postleitzahl" required/>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="formOrt" placeholder="Ort" required/>
+                                </div>
+                                <div class="col-md-12 mt-2">
+                                    <button type="submit" class="btn btn-primary btn-xs form-control">Speichern</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="standorte"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            getUnternehmenInfo();
+            getAnsprechpartner();
+            updateVorschau();
+            getStandorte();
+
+            
+	
+            //STAMMDATEN
+            $('#editStammdaten').on('click', function(){
+                $('#stammdatenWrapper').slideToggle('slow');
+            });
+
+            $('#stammdatenForm').on('submit', function(e){
+                e.preventDefault();
+                let data = new FormData($(this)[0]);
+
+                $.ajax({
+                    url:"intern/updateStammdaten",
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    type: 'POST',
+                    success: function ( data ) {
+                        location.reload();
+                    }
+                });
+            });
+
+            //UNTERNEHMENINFORMATION
+            $('#unternehmenInfo').on('submit','#unternehmenInfoForm',  function(e){
+                e.preventDefault();
+                
+                let kurzinfo        = $('#kurzinfo').val();
+                let gruendungsjahr  = $('#gruendungsjahr').val();
+                let anzMitarbeiter  = $('#anzMitarbeiter').val();
+                let id_branche      = $('#id_branche').val();
+
+                $.ajax({
+                    url:"intern/updateUnternehmenInfo",
+                    data: {
+                        kurzinfo: kurzinfo,
+                        gruendungsjahr: gruendungsjahr,
+                        anzMitarbeiter: anzMitarbeiter,
+                        id_branche: id_branche
+                    },
+                    type: 'POST',
+                    success: function ( data ) {
+                        getUnternehmenInfo()
+                    }
+                });
+            })
+
+
+
+            //ANSPRECHPARTNER
+            $('.btnShowAddAnsprechpartnerForm').on('click', function(){
+                $('#addFieldAnsprechpartner').fadeIn(1000);
+            });
+
+            $('#addAnsprechpartnerForm').on('submit', function(e){
+                e.preventDefault()
+                let vorname     = $('#formVorname').val()
+                let nachname    = $('#formNachname').val()
+                let telefon     = $('#formTelefon').val()
+                let email       = $('#formEmail').val()
+
+                $.ajax({
+                    type: "POST",
+                    url: "intern/addAnsprechpartner",
+                    data: {
+                        vorname: vorname,
+                        nachname: nachname,
+                        telefon: telefon,
+                        email: email
+                    },
+                    success: function(response){
+                        getAnsprechpartner();
+                        $('#addFieldStandorte').fadeOut(1000)
+                    }
+                });
+            });
+
+            $('#ansprechpartner').on('click','.delAnsprechpartner', function(){
+                let id = $(this).next('.idAnsprechpartner').val()
+                $.ajax({
+                    type: "POST",
+                    url: "intern/deleteAnsprechpartner",
+                    data: {
+                        id: id
+                    },
+                    success: function(response){
+                        getAnsprechpartner();
+                    }
+                });
+            });
+
+
+            //STANDORTE
+            $('.btnShowAddStandorteForm').on('click', function(){
+                $('#addFieldStandorte').fadeIn(1000);
+            });
+
+            $('#addStandorteForm').on('submit', function(e){
+                e.preventDefault()
+                let strasse = $('#formStrasse').val()
+                let plz     = $('#formPLZ').val()
+                let ort     = $('#formOrt').val()
+                
+                $.ajax({
+                    type: "POST",
+                    url: "intern/addStandorte",
+                    data: {
+                        strasse: strasse,
+                        plz: plz,
+                        ort: ort
+                    },
+                    success: function(response){
+                        getStandorte();
+                        $('#addFieldStandorte').fadeOut(1000)
+                    }
+                });
+            });
+
+            $('#standorte').on('click','.delStandorte', function(){
+                let id = $(this).next('.idStandorte').val()
+                $.ajax({
+                    type: "POST",
+                    url: "intern/deleteStandorte",
+                    data: {
+                        id: id
+                    },
+                    success: function(response){
+                        getStandorte();
+                    }
+                });
+            });
+
+
+            //DARSTELLUNG
+            $('#primaryColor').on('change', function(e){
+                let art = 'primaryColor';
+                let color= $(this).val()
+                changeColor(art, color);
+            });
+
+            $('#bgColor').on('change', function(e){
+                let art = 'bgColor';
+                let color= $(this).val()
+                changeColor(art, color);
+            });
+
+            $('#fontColor').on('change', function(e){
+                let art = 'fontColor';
+                let color= $(this).val()
+                changeColor(art, color);
+            });
+
+            $('#linkColor').on('change', function(e){
+                let art = 'linkColor';
+                let color= $(this).val()
+                changeColor(art, color);
+            });
+
+
+            function changeColor(art ,color){
+                $.ajax({
+                    type: "POST",
+                    url: "intern/changeColor",
+                    data: {
+                        art: art,
+                        color: color
+                    },
+                    success: function(response){
+                        updateVorschau();
+                    }
+                });
+            }
+
+            function updateVorschau(){
+                $.ajax({
+                    type: "POST",
+                    url: "intern/updateVorschau",
+                    success: function (response) {
+                        $("#vorschau").html(response)
+                    }
+                });
+            }
+
+            function getAnsprechpartner(){
+                $.ajax({
+                    type: "POST",
+                    url: "intern/getAnsprechpartner",
+                    success: function(response){
+                        $('#ansprechpartner').html(response)
+                    }
+                });
+            }
+
+            function getUnternehmenInfo(){
+                $.ajax({
+                    type: "POST",
+                    url: "intern/getUnternehmenInfo",
+                    success: function(response){
+                        $('#unternehmenInfo').html(response)
+                    }
+                });
+            }
+
+            function getStandorte(){
+                 $.ajax({
+                    type: "POST",
+                    url: "intern/getStandorte",
+                    success: function(response){
+                        $('#standorte').html(response)
+                    }
+                });
+            }
+        });
+    </script>
+
+{% endblock %}

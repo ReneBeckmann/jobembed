@@ -1,0 +1,23 @@
+<table class="table table-fluid table-striped">
+    <thead>
+        <th>Straße</th>
+        <th>Postleitzahl</th>
+        <th>ort</th>
+        <th class="text-end">Optionen</th>
+    </thead>
+    <tbody>
+        {% for row in standorte %}
+            <tr>
+                <td>{{ row.strasse }}</td>
+                <td>{{ row.plz }}</td>
+                <td>{{ row.ort }}</td>
+                <td class="text-end">
+                    <div class="controls">
+                        <button class="btn btn-xs btn-danger delStandorte"><i class="fa-solid fa-trash"></i></button>
+                        <input type="hidden" class="idStandorte" value="{{ row.id }}">
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

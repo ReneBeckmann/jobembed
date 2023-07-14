@@ -1,0 +1,11 @@
+<div class="inputAntwort">
+    <input 
+        type="text" 
+        class="form-control antwort float-start mb-3" 
+        type="text"
+        data-id="{% if antwort.id %} {{ antwort.id }}  {% else %} {{ last_id_antwort }} {% endif %}" 
+        placeholder="Geben Sie hier eine mögliche Antwort an." style="width:95%;"
+        value="{{ antwort.antwort }}"
+    >
+    <button class="btn btn-sm btn-danger float-end delAntwort" data-id="{% if antwort.id %} {{ antwort.id }}  {% else %} {{ last_id_antwort }} {% endif %}">x</button>
+</div>

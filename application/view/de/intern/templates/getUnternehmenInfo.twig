@@ -1,0 +1,37 @@
+<form id="unternehmenInfoForm">
+    {% for row in unternehmen %}
+        <div class="mb-3">
+            <label for="kurzinfo">Unternehmensbescheibung</label>
+            <textarea name="kurzinfo" id="kurzinfo" cols="30" rows="10" class="form-control">{{ row.kurzinfo }}</textarea>
+        </div>
+        <div class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="gruendungsjahr">Gründungsjahr</label>
+                    <input type="text" name="gruendungsjahr" id="gruendungsjahr" class="form-control" value="{{ row.gruendungsjahr }}"/>
+                </div>
+                <div class="col-md-4">
+                    <label for="anzMitarbeiter">Anzahl Mitarbeiter</label>
+                    <input type="text" name="anzMitarbeiter" id="anzMitarbeiter" class="form-control" value="{{ row.anzMitarbeiter }}"/>
+                </div>
+                <div class="col-md-4">
+                    <label for="branche">Branche  {{ idbranche }}</label>
+                    <select name="branche" id="id_branche" class="form-select">
+                        {% for branche in branchen %}
+                            <option {% if row.id_branche == branche.id %} selected {% endif %} value="{{ branche.id }}">{{ branche.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    
+    <input class="btn btn-primary form-control" type="submit" name="unternehmenInfoForm" id="unternehmenInfoForm" value="Speichern">
+</form>
+
+{% block scripts %}
+    <script src="js/ckeditor/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace("kurzinfo");
+    </script>
+{% endblock %}

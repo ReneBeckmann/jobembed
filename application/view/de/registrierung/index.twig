@@ -1,0 +1,395 @@
+{% extends layout %}
+{% block title %}Registrierung{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="css/jquery.steps.css">    
+    <style>
+        .wizard>.steps {
+            position: relative;
+            display: none;
+            width: 100%;
+        }
+
+        .wizard>.actions{
+            display:none;
+        }
+
+        .wizard>.content {
+            background: #fff;
+        }
+
+        .btn-prev, .btn-next {
+            color: rgb(125, 125, 125);
+            background-color: #fdc661;
+            border-color: #fdc661;
+        }
+
+
+
+        #verificationAlert{
+            display: none;
+            padding: 5px 10px;
+            border:1px solid red;
+            border-radius: 5px;;
+        }
+
+		.cascading-right {
+			margin-right: -50px;
+		}
+	
+		@media (max-width: 991.98px) {
+			.cascading-right {
+			margin-right: 0;
+			}
+		}
+    </style>
+{% endblock %}
+{% block content %}
+    
+	<section class="text-center text-lg-start">
+		<div class="container py-4">
+			<div class="row g-0 align-items-center">
+				<div class="col-lg-6 mb-5 mb-lg-0">
+					<div class="card cascading-right" style="background: hsla(0, 0%, 100%, 0.55); backdrop-filter: blur(30px);">
+						<div class="card-body p-5 shadow-5 text-center">
+							<h2 class="fw-bold mb-5">Jetzt registrieren</h2>
+                            <form action="registrierung/register" method="POST">
+                                <div class="row mt-5">
+                                    <div class="col-md-12">
+                    
+                                        <div id="registerForm">
+                    
+                                            <h3></h3>
+                                            <section>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <h4>Ansprechpartner:</h4>
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <label for="anrede">Anrede:</label>
+                                                        <select class="form-select" name="anrede" id="anrede"required >
+                                                            <option disabled selected value>Bitte auswählen</option>
+                                                            <option value="Herr">Herr</option>
+                                                            <option value="Frau">Frau</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-6">
+                                                        <label for="vorname">Vorname</label>
+                                                        <input class="form-control" type="text" name="vorname" id="vorname"  required/>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="nachname">Nachname</label>
+                                                        <input class="form-control" type="text" name="nachname" id="nachname"  required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <label for="email">E-Mail</label>
+                                                        <input class="form-control" type="email" name="email" id="email"  required/>
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <label for="password">Passwort</label>
+                                                        <input class="form-control" type="password" name="password" id="password"  required/>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <label for="passwordVerify">Passwort bestätigen</label>
+                                                        <input class="form-control" type="password" name="passwordVerify" id="passwordVerify"  required/>
+                                                        <p class="mt-1" id="verificationAlert">Die Passwörter stimmen nicht überein!</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-5">
+                                                    <div class="col-md-12">
+                                                        <button class="btn btn-primary btn-next w-20 float-end">Weiter</button>
+                                                    </div>
+                                                </div>
+                                            </section>
+                    
+                    
+                                            <h3></h3>
+                                            <section>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <h4>Angaben zum Unternehmen</h4>
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <label for="unternehmenName">Name des Unternehmens</label>
+                                                        <input class="form-control" type="text" name="unternehmenName" id="unternehmenName"  required/>
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <label for="strasse">Straße / Hausnummer</label>
+                                                        <input class="form-control" type="text" name="strasse" id="strasse"  required/>
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="row mt-2">
+                                                    <div class="col-md-6">
+                                                        <label for="plz">Postleitzahl</label>
+                                                        <input class="form-control" type="text" name="plz" id="plz"  required/>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="ort">Ort</label>
+                                                        <input class="form-control" type="text" name="ort" id="ort"  required/>
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="row mt-2">
+                                                    <div class="col-md-6">
+                                                        <label for="telefon">Telefon</label>
+                                                        <input class="form-control" type="text" name="telefon" id="telefon"  required/>
+                                                    </div>
+                            
+                                                    <div class="col-md-6">
+                                                        <label for="fax">Fax</label>
+                                                        <input class="form-control" type="text" name="fax" id="fax" />
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="row mt-2">
+                                                    <div class="col-md-6">
+                                                        <label for="unternehmenEmail">E-Mail</label>
+                                                        <input class="form-control" type="email" name="unternehmenEmail" id="unternehmenEmail" placeholder="info@example.de"  required/>
+                                                    </div>
+                                                
+                                                    <div class="col-md-6">
+                                                        <label for="url">Webseite</label>
+                                                        <input class="form-control" type="url" name="url" id="url" placeholder="https://www.example.de" required/>
+                                                    </div>
+                                                </div>
+                    
+                                                <div class="row mt-3">
+                                                    <div class="col-md-12">
+                                                        <input class="form-control btn btn-primary"  type="submit" name="sub_Anmelden" id="sub_Anmelden" value="Anmelden" />
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row mt-4">
+                                                    <div class="col-md-12">
+                                                        <button class="btn btn-primary btn-prev w-20 float-start">Zurück</button>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                    
+                                    </div>
+                    
+                                    <div class="col-md-6">
+                                      
+                                    </div>
+                                </div>
+                            </form>
+						</div>
+					</div>
+				</div>
+		
+				<div class="col-lg-6 mb-5 mb-lg-0">
+					<img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg" class="w-100 rounded-4 shadow-4" alt="" />
+				</div>
+			</div>
+		</div>
+	</section>
+	
+
+
+
+      
+    {# <div class="container">
+  
+
+		<form action="registrierung/register" method="POST">
+			<div class="row mt-5">
+				<div class="col-md-6">
+
+                    <div id="registerForm">
+
+                        <h3></h3>
+                        <section>
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <h4>Ansprechpartner:</h4>
+                                </div>
+                            </div>
+        
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label for="anrede">Anrede:</label>
+                                    <select class="form-select" name="anrede" id="anrede"required >
+                                        <option disabled selected value>Bitte auswählen</option>
+                                        <option value="Herr">Herr</option>
+                                        <option value="Frau">Frau</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label for="vorname">Vorname</label>
+                                    <input class="form-control" type="text" name="vorname" id="vorname"  required/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="nachname">Nachname</label>
+                                    <input class="form-control" type="text" name="nachname" id="nachname"  required/>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label for="email">E-Mail</label>
+                                    <input class="form-control" type="email" name="email" id="email"  required/>
+                                </div>
+                                
+                            </div>
+        
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label for="password">Passwort</label>
+                                    <input class="form-control" type="password" name="password" id="password"  required/>
+                                </div>
+                                
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label for="passwordVerify">Passwort bestätigen</label>
+                                    <input class="form-control" type="password" name="passwordVerify" id="passwordVerify"  required/>
+                                    <p class="mt-1" id="verificationAlert">Die Passwörter stimmen nicht überein!</p>
+                                </div>
+                            </div>
+                        </section>
+
+
+                        <h3></h3>
+                        <section>
+                            <div class="row mt-4">
+                                <div class="col-md-12">
+                                    <h4>Angaben zum Unternehmen</h4>
+                                </div>
+                            </div>
+        
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label for="unternehmenName">Name des Unternehmens</label>
+                                    <input class="form-control" type="text" name="unternehmenName" id="unternehmenName"  required/>
+                                </div>
+                            </div>
+        
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label for="strasse">Straße / Hausnummer</label>
+                                    <input class="form-control" type="text" name="strasse" id="strasse"  required/>
+                                </div>
+                            </div>
+        
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label for="plz">Postleitzahl</label>
+                                    <input class="form-control" type="text" name="plz" id="plz"  required/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="ort">Ort</label>
+                                    <input class="form-control" type="text" name="ort" id="ort"  required/>
+                                </div>
+                            </div>
+        
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label for="telefon">Telefon</label>
+                                    <input class="form-control" type="text" name="telefon" id="telefon"  required/>
+                                </div>
+        
+                                <div class="col-md-6">
+                                    <label for="fax">Fax</label>
+                                    <input class="form-control" type="text" name="fax" id="fax" />
+                                </div>
+                            </div>
+        
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <label for="unternehmenEmail">E-Mail</label>
+                                    <input class="form-control" type="email" name="unternehmenEmail" id="unternehmenEmail" placeholder="info@example.de"  required/>
+                                </div>
+                            
+                                <div class="col-md-6">
+                                    <label for="url">Webseite</label>
+                                    <input class="form-control" type="url" name="url" id="url" placeholder="https://www.example.de" required/>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input class="form-control btn btn-primary"  type="submit" name="sub_Anmelden" id="sub_Anmelden" value="Anmelden" />
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+				</div>
+
+				<div class="col-md-6">
+                  
+				</div>
+			</div>
+		</form>
+    </div> #}
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="js/jquery.steps.js"></script>
+    <script src="js/iframeResizer.contentWindow.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#passwordVerify').on('keyup', function(e){
+                
+                let password            = $('#password').val()
+                let passwordVerify      = $('#passwordVerify').val()
+                let verificationAlert   = $('#verificationAlert');
+
+                if( password != passwordVerify){
+                    verificationAlert.fadeIn(500);
+                }else{
+                    verificationAlert.fadeOut(500);
+                }
+            })
+
+            /*INITI STEPWIZARD*/
+            let stepsWizard = $("#registerForm")
+
+            stepsWizard.steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "fade",
+                autoFocus: true
+            });
+
+            /*CUSTOM BUTTONS FOR STEPWIZARD*/
+            $('.btn-prev').on('click', function (event) {
+                event.preventDefault();
+                stepsWizard.steps('previous')
+            })
+
+            $('.btn-next').on('click', function (event) {
+                event.preventDefault();
+                stepsWizard.steps('next')
+            })
+        });
+
+    </script>
+{% endblock %}

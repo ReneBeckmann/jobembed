@@ -1,0 +1,31 @@
+<div class="mt-5 inputFrage">
+    <div class="row">
+        <div class="col-md-10">
+            <span class="input-group-text"><i class="fa-solid fa-sort"></i></span>
+            <input 
+                class="form-control frage" 
+                type="text" 
+                data-id="{% if frage.id %} {{ frage.id }}  {% else %} {{ last_id }} {% endif %}" 
+                data-position="{% if frage.position %} {{ frage.position }}  {% else %} {{ anzahl }} {% endif %}" 
+                placeholder="Tragen Sie hier Ihre Frage ein." 
+                value="{{ frage.frage }}"
+            />
+            <div class="antworten ps-5 pb-3 mt-3">
+                Antworten:
+                {% if antworten %}
+                    {% for antwort in antworten %}
+                        {% if frage.id == antwort.id_frage %}
+                            {% include  'de/intern/templates/addAntwort.twig' %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% include  'de/intern/templates/addAntwort.twig' %}
+                {% endif %}
+            </div>
+            <button class="btn btn-primary btn-sm float-end addAntwort">Antwort hinzufügen</button>
+        </div>
+        <div class="col md-2">
+            <button class="btn-danger btn-xs form-control delFrage" data-id="{% if frage.id %} {{ frage.id }}  {% else %} {{ last_id }} {% endif %}">Frage löschen</button>
+        </div>
+    </div>
+</div>

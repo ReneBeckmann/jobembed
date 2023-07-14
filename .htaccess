@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase /jobembed/
+RewriteRule !\.(js|gif|jpg|png|css|txt|otf|eot|svg|ttf|woff|woff2|pdf|PDF|zip|vcf|mp4|map|ico)$ public/index.php [L]
+RewriteCond %{REQUEST_URI} !^/jobembed/public/
+RewriteRule ^(.*)$ public/$1 [L]

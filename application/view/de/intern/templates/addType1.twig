@@ -1,0 +1,23 @@
+<div class="mt-5 inputFrage">
+    <div class="row">
+        <div class="col-md-10">
+            <span class="input-group-text"><i class="fa-solid fa-sort"></i></span>
+            <input 
+                class="form-control frage" 
+                type="text" 
+                data-id="{% if frage.id %} {{ frage.id }}  {% else %} {{ last_id }} {% endif %}" 
+                data-position="{% if frage.position %} {{ frage.position }}  {% else %} {{ anzahl }} {% endif %}" 
+                value="{{ frage.frage }}" 
+                placeholder="Tragen Sie hier Ihre Frage ein."
+            />
+            <div class="antworten ps-5 pb-3 mt-3">
+                Antworten:
+                <input class="form-control" type="text" value="JA" readonly>
+                <input class="form-control mt-2" type="text" value="NEIN" readonly>
+            </div>
+        </div>
+        <div class="col md-2">
+            <button class="btn-danger btn-xs form-control delFrage" data-id="{% if frage.id %} {{ frage.id }}  {% else %} {{ last_id }} {% endif %}">Frage löschen</button>
+        </div>
+    </div>
+</div>
